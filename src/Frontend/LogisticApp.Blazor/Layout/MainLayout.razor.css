@@ -7,7 +7,7 @@ main {
   display: grid;
   width: 96%;
   gap: 8rem;
-  grid-template-columns: 14rem auto 14rem;
+  grid-template-columns: 14rem auto 0;
   margin: 0 auto;
 }
 

@@ -1,0 +1,83 @@
+@using LogisticsApp.Blazor.Services
+@using LogisticsApp.Blazor.Models
+
+@page "/shipment/{ShipmentId:guid}"
+
+
+@inject ApiService ApiService
+@inject NavigationManager NavigationManager
+
+
+
+<h1>Informacije O Pošiljci</h1>
+
+
+<div class="sipment-info-container">
+    
+        @if(shipment != null)
+        {
+
+            <div class="shipment-info">        
+                <div class="info-item">
+                    <span class="label">Id:</span>
+                    <span class="value">@shipment.Id</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Ime:</span>
+                    <span class="value">@shipment.Naziv</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Status:</span>
+                    <span class="value">@shipment.ShipmentStatus</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Datum kreiranja:</span>
+                    <span class="value">@shipment.DatumKreiranja.ToString("dd.MM.yyyy HH:mm:ss")</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Datum isporuke:</span>
+                    <span class="value">
+                        @(shipment.DatumIsporuke?.ToString("dd.MM.yyyy HH:mm:ss") ?? "Datum isporuke nije naveden")
+                    </span>
+                </div>
+                <div class="button-container">
+                    <button class="btn-back" @onclick="NavigateBack">Nazad</button>
+                    <button class="btn-edit" @onclick="() => NavigateToEditPage(shipment.Id)">Izmeni</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <h3>Pošiljka sa id-jem: @ShipmentId nije pronađena</h3>
+            <div class="button-container">
+                <button class="btn-back" @onclick="NavigateBack">Nazad</button>
+            </div>
+        }
+    
+</div>
+
+
+
+
+@code
+{
+    [Parameter] public Guid ShipmentId { get; set; }
+    private ShipmentDto? shipment;
+
+    protected override async Task OnInitializedAsync()
+    {
+        shipment = await ApiService.GetShipmentById(ShipmentId);
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void NavigateToEditPage(Guid id)
+    {
+        NavigationManager.NavigateTo($"/shipment/edit/{id}");
+    }
+}
+    
+

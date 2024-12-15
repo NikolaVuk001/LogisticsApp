@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch API",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build API",
+      "program": "${workspaceFolder}/src/LogisticsApp.API/bin/Debug/net8.0/LogisticsApp.API.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/LogisticsApp.API",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bhttps?://\\S+"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/ApiApp/Views"
+      }
+    },
+    {
+      "name": "Launch Blazor App",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build Blazor App",
+      "program": "${workspaceFolder}/src/LogisticsApp.BalzorWASM/bin/Debug/net8.0/LogisticsApp.BalzorWASM.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/LogisticsApp.BalzorWASM",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bhttps?://\\S+"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Pages": "${workspaceFolder}/BlazorApp/Pages"
+      }
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+@using LogisticsApp.Blazor.Exceptions
+@using LogisticsApp.Blazor.Services
+@using LogisticsApp.Blazor.Models
+@page "/shipment/edit/{ShipmentId:guid}"
+
+@inject ApiService ApiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+<h1>Izmeni Pošiljku</h1>
+
+<div class="sipment-info-container">
+    @if(shipment != null)
+    {
+        
+            <EditForm Model="shipment" class="shipment-info" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="info-item">
+                    <span class="label">Id:</span>
+                    <span class="value">@shipment.Id</span>
+                </div>
+
+                <div class="info-item">
+                     <label for="name-input" class="floating-label">Ime Pošiljke</label>
+                    @if(ValidationErrors.TryGetValue(nameof(shipment.Naziv), out var nazivError))
+                    {
+                        <span class="validation-error">@nazivError</span>
+                    }
+                    <InputText @bind-Value="shipment.Naziv" id="name-input" class="floating-input" />
+                    
+                </div>
+
+               <div class="info-item">              
+                    <label for="status">Status Pošiljke</label>
+                    @if(ValidationErrors.TryGetValue(nameof(shipment.Status), out var statusError))
+                    {
+                        <span class="validation-error">@statusError</span>
+                    }
+                    <select @bind="shipment.Status" id="status" class="floating-input">                
+                        <option value="U Skladištu">U Skladištu</option>
+                        <option value="Na Putu">Na Putu</option>
+                        <option value="Isporučeno">Isporučeno</option>                
+                    </select>
+                    
+                   
+                    
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Datum Isporuke:</span>
+                    @if(ValidationErrors.TryGetValue(nameof(shipment.DatumIsporuke), out var dataError))
+                    {
+                        <span class="validation-error">@dataError</span>
+                    }
+
+                    <div class="input-button-container">                        
+                        <input type="datetime-local" id="deliveryDate" class="floating-input" @bind="shipment.DatumIsporuke" />
+                        <button type="button" class="primary cancle-button" @onclick="SetDateToNull">
+                            <span class="material-symbols-sharp">cancel</span>
+                        </button>
+                    
+                    </div>
+
+                    
+                </div>
+
+                <div class="button-container">
+                    <button class="btn-back" @onclick="NavigateBack">Nazad</button>
+                    <button type="submit" class="btn-edit">Potvrdi</button>
+                </div>
+            </EditForm>
+        
+    }
+    else
+    {
+        <h3>Pošiljka sa id-jem: @ShipmentId nije pronađena</h3>
+        <div class="button-container">
+            <button class="btn-back" @onclick="NavigateBack">Nazad</button>
+        </div>
+    }
+    
+</div>
+
+
+@code {
+    [Parameter] public Guid ShipmentId { get; set; }
+    private UpdateShipmentDto? shipment = null;
+    private string ShipmentIdStr = String.Empty;
+    private Dictionary<string, string> ValidationErrors = new();
+    
+    protected async override Task OnInitializedAsync()
+    {
+        var originalShipment = await ApiService.GetShipmentById(ShipmentId);
+
+        if(originalShipment != null)
+        {
+            shipment = new UpdateShipmentDto(
+                originalShipment.Id, originalShipment.Naziv, originalShipment.ShipmentStatus, originalShipment.DatumIsporuke);
+            
+            ShipmentIdStr = shipment.Id.ToString();
+        }
+
+    }
+
+    private async Task HandleSubmit()
+    {
+        if(shipment != null)
+        {
+            try 
+            {
+                ValidationErrors.Clear();
+                var updatedShipment = await ApiService.UpdateShipment(shipment);
+                await JSRuntime.InvokeVoidAsync("alert", "Pošiljka je uspešno izmenjena");
+                NavigationManager.NavigateTo($"/shipment/{updatedShipment.Id}"); 
+
+            }
+            catch(ApiValidationException ex)
+            {
+                ValidationErrors = ex.Errors;
+            }
+        }
+        else
+        {
+            NavigateBack();
+        }
+
+
+        
+    }
+
+    // Setting the date to null if the status is changed from 'Isporučeno'
+    private void SetDateToNull()
+    {        
+        shipment!.DatumIsporuke = null;
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

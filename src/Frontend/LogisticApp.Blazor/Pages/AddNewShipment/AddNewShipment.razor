@@ -1,0 +1,95 @@
+@using LogisticApp.Blazor.Components.TextInput
+@using LogisticsApp.Blazor.Exceptions
+@using LogisticsApp.Blazor.Services
+@using LogisticsApp.Blazor.Models
+
+@page "/shipment/addNewShipment"
+
+@inject ApiService ApiService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+
+
+<h1>Dodaj Novu Pošiljku</h1>
+<div class="form_container">
+<EditForm Model="shipment" class="form" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+        
+        <div class="name-input-container">
+            <label for="name-input" class="floating-label">Ime Pošiljke</label>
+            <InputText @bind-Value="shipment.Naziv" id="name-input" class="floating-input" />
+            @if(ValidationErrors.TryGetValue(nameof(shipment.Naziv), out var nazivError))
+            {
+                <span class="validation-error">@nazivError</span>
+            }
+        </div>
+
+        <div class="status-filter">              
+            <label for="status">Status Pošiljke</label>
+            <select @bind="shipment.ShipmentStatus" id="status">                
+                <option value="U Skladištu">U Skladištu</option>
+                <option value="Na Putu">Na Putu</option>
+                <option value="Isporučeno">Isporučeno</option>                
+            </select>
+            @if(ValidationErrors.TryGetValue(nameof(shipment.ShipmentStatus), out var statusError))
+            {
+                <span class="validation-error">@statusError</span>
+            }
+        </div>
+        @if(shipment.ShipmentStatus == "Isporučeno")
+        {
+            <div class="date-container">
+                <input type="datetime-local" id="datetime-input" class="date-input" @bind="shipment.DatumIsporuke" />
+            </div>
+            @if(ValidationErrors.TryGetValue(nameof(shipment.DatumIsporuke), out var dataError))
+            {
+                <span class="validation-error">@dataError</span>
+            }
+        }
+        
+        <div class="button-container">
+            <button class="back-btn" @onclick="NavigateBack">Nazad</button>
+            <button class="submit-btn" type="submit">Dodaj Novu Pošiljku</button>
+        </div>
+        
+    
+</EditForm>
+
+
+</div>
+
+
+
+
+@code {
+
+    private CreateShipmentDto shipment = new("");
+    private Dictionary<string, string> ValidationErrors = new();
+    
+
+    private async Task HandleSubmit()
+    {
+        try 
+        {
+            ValidationErrors.Clear();
+            var createdShipment = await ApiService.CreateShipment(shipment);
+            await JSRuntime.InvokeVoidAsync("alert", "Pošiljka je uspešno kerirana.");
+            NavigationManager.NavigateTo($"/shipment/{createdShipment.Id}"); 
+
+        }
+        catch(ApiValidationException ex)
+        {
+            ValidationErrors = ex.Errors;
+        }
+
+        
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}    

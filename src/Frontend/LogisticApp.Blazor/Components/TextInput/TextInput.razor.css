@@ -1,0 +1,21 @@
+.input-container {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container ::deep input {
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--clr-dark);
+  border: 0.5px solid var(--clr-dark-variant);
+  border-radius: var(--border-radius-1);
+  padding: 0.5rem 1.6rem;
+}
+
+.input-container .floating-label {
+  font-size: 1rem;
+  color: var(--clr-dark);
+  margin-bottom: 0.5rem;
+}

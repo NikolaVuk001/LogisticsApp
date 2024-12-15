@@ -1,0 +1,70 @@
+﻿@using LogisticsApp.Blazor.Services;
+@inject LoginService LoginService
+@inject NavigationManager NavigationManager
+
+<aside>
+        <!-- start top -->
+        <div class="top">
+          <div class="logo">
+            <h2>Sistem Za <span class="danger">P</span>ošiljke</h2>
+          </div>
+          <div class="close">
+            <span class="material-symbols-sharp" id="close_btn"> close </span>
+          </div>
+        </div>
+        <!-- end top -->
+
+        <div class="sidebar">
+            
+        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <span class="material-symbols-sharp">grid_view </span>
+            <h3>Pošiljke</h3>
+        </NavLink>
+            
+        
+        <NavLink class="nav-link active" href="/shipment/addNewShipment" Match="NavLinkMatch.All">
+            <span class="material-symbols-sharp">box_add </span>
+            <h3>Dodaj Novu Pošiljku</h3>
+        </NavLink>
+
+        
+        
+        <a class="nav-link active" @onclick="LoginService.ToggleLoginState">
+            @if(LoginService.IsLoggedIn != true)
+            {
+                <span class="material-symbols-sharp">login</span>
+                <h3>Login</h3>
+            }
+            else 
+            {
+                <span class="material-symbols-sharp">logout</span>
+                <h3>Logout</h3>
+            }
+            
+        </a>
+            
+        
+
+         
+          
+          
+        </div>
+      </aside>
+
+@code {
+
+    
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
+    
+
+
+

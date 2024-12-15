@@ -1,0 +1,18 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Linq.Expressions
+
+<div class="input-container">
+    <label for="@Id" class="floating-label">@Label</label>
+    <InputText @bind-Value="Value" id="@Id" class="floating-input" />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <span class="validation-error">@ErrorMessage</span>
+    }
+</div>
+
+@code {
+    [Parameter] public required string Label { get; set; }  
+    [Parameter] public required string Id { get; set; }  
+    [Parameter] public required string Value { get; set; }  
+    [Parameter] public string? ErrorMessage { get; set; }  
+}

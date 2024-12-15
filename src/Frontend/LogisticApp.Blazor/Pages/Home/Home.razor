@@ -1,0 +1,135 @@
+﻿@using LogisticsApp.Blazor.Services
+@using LogisticsApp.Blazor.Models
+@using Microsoft.AspNetCore.Components
+
+
+@page "/"
+
+@inject ApiService ApiService
+@inject NavigationManager NavigationManager
+@inject LoginService LoginService
+
+
+
+<PageTitle>Dashboard</PageTitle>
+
+<h1>Dashboard</h1>
+
+
+<div class="filters">
+  <div class="filter-container">
+
+    <div class="name-filter">              
+      <input type="text" @bind="searchQuery" placeholder="Pronadji posiljku pošiljku"/>
+    </div>
+
+    <div class="status-filter">              
+      <select @bind="selectedStatus">
+        <option value="">Svi Statusi</option>
+        <option value="Na Putu">Na Putu</option>
+        <option value="Isporučeno">Isporučeno</option>
+        <option value="U Skladištu">U Skladištu</option>
+      </select>
+    </div>
+    
+
+    <button @onclick="LoadShipments" >Load Shipments</button>
+  </div>
+</div>
+
+<div class="recent_shipments">
+  <h1>Lista Pošiljki</h1>
+  
+  <table>
+      <thead>
+          <tr>
+              <th>Id</th>
+              <th>Ime</th>
+              <th>Status</th>
+              <th>Datum kreiranja</th>
+              <th>Datum isporuke</th>
+              <th>Akcije</th>
+          </tr>
+      </thead>
+      <tbody>
+          @foreach(var shipment in filteredShipments)
+          {
+              <tr>
+                  <td>@shipment.Id</td>
+                  <td>@shipment.Naziv</td>
+                  <td>@shipment.ShipmentStatus</td>
+                  <td>@shipment.DatumKreiranja</td>
+                  <td>@shipment.DatumIsporuke</td>
+                  <td>
+                    
+                    <div class="actions">
+                      <button class="primary" @onclick="() => NavigateToDetails(shipment.Id)">
+                        <span class="material-symbols-sharp">visibility</span>
+                      </button>
+                      
+                      @if(LoginService.IsLoggedIn)
+                      {
+                        <button class="warning" @onclick="() => DeleteShipment(shipment.Id)">
+                          <span class="material-symbols-sharp">delete</span>
+                        </button>
+                      }
+                      
+                    </div>
+                  </td>
+              </tr>
+          }
+      </tbody>
+  </table>
+</div>
+
+       
+
+       
+@code {
+    
+    private IEnumerable<ShipmentDto> shipments = [];
+    private string searchQuery = string.Empty;
+    private string selectedStatus = string.Empty;
+
+    private IEnumerable<ShipmentDto> filteredShipments => shipments
+        .Where(
+            s => (string.IsNullOrEmpty(searchQuery) ||
+            s.Naziv.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(selectedStatus) || 
+            s.ShipmentStatus == selectedStatus))
+        .ToList();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadShipments();
+        LoginService.OnStateChanged += StateHasChanged; 
+    }
+    private async Task LoadShipments()
+    {
+        shipments = await ApiService.GetShipmentsAsync();
+    }
+    
+    
+    // Actions
+    private void NavigateToDetails(Guid id)
+    {        
+        NavigationManager.NavigateTo($"/shipment/{id}");
+    }
+
+    private async Task DeleteShipment(Guid id)
+    {
+        await ApiService.DeleteShipment(id);
+        await LoadShipments();
+    }
+
+
+    // Login Event Subscripton
+    
+    public void Dispose()
+    {
+        LoginService.OnStateChanged -= StateHasChanged; 
+    }
+
+}
+

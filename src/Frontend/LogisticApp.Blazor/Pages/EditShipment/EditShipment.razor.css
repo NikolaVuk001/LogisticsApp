@@ -1,0 +1,134 @@
+.sipment-info-container {
+  width: 100%;
+  gap: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--card-border-radius);
+  margin-top: 1rem;
+  box-shadow: var(--box-shadow);
+  padding: 2rem;
+}
+
+::deep form.shipment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 80%;
+  padding: var(--card-padding);
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.input-button-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+.input-button-container ::deep input.floating-input {
+  margin-right: 10px;
+  background-color: transparent;
+  border: 1px solid var(--clr-dark-variant);
+  padding: 0.5rem;
+  border-radius: var(--border-radius-1);
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.input-button-container button.cancle-button {
+  display: flex;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 80%;
+  width: 30px;
+  height: 30px;
+  margin-top: 0.7rem;
+  padding: 0.2rem;
+  background: transparent;
+  cursor: pointer;
+
+  transition: all 0.1s ease;
+}
+.input-button-container button.cancle-button:hover {
+  color: var(--clr-white);
+  background-color: var(--clr-primary);
+}
+
+.info-item ::deep input.floating-input {
+  background-color: transparent;
+  border: 1px solid var(--clr-dark-variant);
+  padding: 0.5rem;
+  border-radius: var(--border-radius-1);
+  width: 50%;
+  margin-top: 0.5rem;
+}
+
+.info-item select {
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--clr-dark);
+  border: 0.5px solid var(--clr-dark-variant);
+  border-radius: var(--border-radius-1);
+  padding: 0.5rem 1.6rem;
+  cursor: pointer;
+  appearance: auto;
+  -webkit-appearance: auto; /* For Safari/Chrome */
+  -moz-appearance: auto; /* For Firefox */
+  width: 50%;
+}
+
+.label {
+  font-weight: bold;
+  color: var(--clr-dark);
+  width: 30%;
+}
+
+.value {
+  color: var(--clr-dark-variant);
+  width: 65%;
+  text-align: right;
+}
+
+.floating-input {
+  background-color: transparent;
+  border: 1px solid var(--clr-dark-variant);
+  padding: 0.5rem;
+  border-radius: var(--border-radius-1);
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.button-container button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--border-radius-1);
+  color: var(--clr-white);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back {
+  background-color: var(--clr-primary);
+}
+
+.btn-edit {
+  background-color: var(--clr-success);
+}
+
+.button-container button:hover {
+  opacity: 0.8;
+  outline: none;
+  transform: translate(5px, -5px);
+  transition: 0.1s ease-in;
+}

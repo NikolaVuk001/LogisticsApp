@@ -38,7 +38,7 @@
    Otvorite terminal i klonirajte projekat:
 
    ```PowerShell
-   git clone <url>
+   git clone https://github.com/NikolaVuk001/LogisticsApp.git
    cd LogisticsApp
    ```
 

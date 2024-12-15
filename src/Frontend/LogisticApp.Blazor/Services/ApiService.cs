@@ -12,7 +12,7 @@ namespace LogisticsApp.Blazor.Services;
 
 public class ApiService(HttpClient httpClient, IOptions<ApiSettings> apiSettings)
 {
-    // TOOD: EXCEPTIONSSS
+
     public string BaseApiUrl { get; } = apiSettings.Value.BaseUrl;
     public async Task<IEnumerable<ShipmentDto>> GetShipmentsAsync()
     {
@@ -33,7 +33,7 @@ public class ApiService(HttpClient httpClient, IOptions<ApiSettings> apiSettings
         var shipment = await response.Content.ReadFromJsonAsync<ShipmentDto>();
 
         return shipment ?? null;
-        // TODO: Handle Ako Shipment ne postoji
+
     }
     public async Task<ShipmentDto> CreateShipment(CreateShipmentDto createShipmentDto)
     {
@@ -44,7 +44,7 @@ public class ApiService(HttpClient httpClient, IOptions<ApiSettings> apiSettings
         response.EnsureSuccessStatusCode();
 
         var createdShipment = await response.Content.ReadFromJsonAsync<ShipmentDto>() ??
-            throw new Exception(); // Zameni Ovo NEKIM KAO API NIJE DOSUPAN EXCEPTIon
+            throw new Exception();
 
         return createdShipment;
 
@@ -59,7 +59,7 @@ public class ApiService(HttpClient httpClient, IOptions<ApiSettings> apiSettings
         response.EnsureSuccessStatusCode();
 
         var updatedShipment = await response.Content.ReadFromJsonAsync<ShipmentDto>() ??
-            throw new Exception(); // Zameni Ovo
+            throw new Exception();
 
         return updatedShipment;
 

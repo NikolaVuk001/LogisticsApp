@@ -9,10 +9,6 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Access the logger
-
-
-// Log that the API is starting
 
 
 builder.Services.AddCors(options =>
